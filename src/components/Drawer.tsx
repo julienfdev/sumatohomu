@@ -2,8 +2,6 @@ import { FunctionComponent, ReactElement, useEffect, useState } from "react";
 import {
   useLocation,
   useNavigate,
-  useResolvedPath,
-  useRoutes,
 } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import theme from "../themes/theme";
