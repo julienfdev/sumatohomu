@@ -48,7 +48,7 @@ const DrawerContainer: FunctionComponent = () => {
           boxSizing: "border-box",
         },
         "& .Mui-selected": {
-          backgroundColor: "rgba(255,255,255,0.2)",
+          backgroundColor: "rgba(255,255,255,0.2)!important",
         },
       }}
     >
