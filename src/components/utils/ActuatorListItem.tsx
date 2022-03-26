@@ -24,7 +24,7 @@ const ActuatorListItem: FunctionComponent<ActuatorListItemProps> = (
   const { actuator, onDelete, onCheckChange } = props;
 
   return (
-    <ListItem key={actuator.id}>
+    <ListItem>
       <IconButton
         color="error"
         onClick={() => {

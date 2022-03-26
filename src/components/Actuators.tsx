@@ -44,7 +44,7 @@ const Actuators: FunctionComponent = () => {
     setActuators([...spoof]);
     setTimeout(() => {
       setInitialized(true);
-    }, 1000);
+    }, 500);
   }, []);
   const handleCheckChange = (
     actuator: Actuator,
@@ -75,6 +75,7 @@ const Actuators: FunctionComponent = () => {
               <List>
                 {actuators.map((actuator) => (
                   <ActuatorListItem
+                    key={actuator.id}
                     onCheckChange={handleCheckChange}
                     onDelete={handleDelete}
                     actuator={actuator}
