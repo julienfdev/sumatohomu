@@ -8,61 +8,62 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Fragment, FunctionComponent, useEffect, useState } from "react";
+import {
+  Fragment,
+  FunctionComponent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Sensor, SensorGet, SensorType } from "../interfaces/Sensor";
 import AddSensor from "./dialogs/AddSensor";
 import SensorListItem from "./utils/SensorListItem";
-
-const spoof = [
-  {
-    id: "2309234",
-    type: SensorType.TEMPERATURE,
-    designation: "Température",
-    rawValue: 740,
-    value: "23.4°C",
-  },
-  {
-    id: "2309214",
-    type: SensorType.HUMIDITY,
-    designation: "Humidité",
-    rawValue: 343,
-    value: "35%HR",
-  },
-] as SensorGet[];
+import requester from "../modules/requester";
+import { AlertContext } from "./utils/AlertProvider";
 
 const Sensors: FunctionComponent = () => {
   const [initialized, setInitialized] = useState(false);
-  const [sensors, setSensors] = useState([] as SensorGet[]);
+  const [sensors, setSensors] = useState([] as SensorGet[] | Sensor[]);
   const [showAddSensor, setShowAddSensor] = useState(false);
   const [intervalId, setIntervalId] = useState(0 as any);
+  const { showAlert } = useContext(AlertContext);
 
   useEffect(() => {
-    const setWatchdog = () => {
-      if (!intervalId) {
-        setIntervalId(
-          setInterval(() => {
-            // FakeGetSensor
-            console.log("Get sensors");
-          }, 5000)
-        );
+    const getSensors = async () => {
+      const response = await requester.get("sensor");
+      setSensors([...response.data]);
+    };
+
+    const setWatchdog = async () => {
+      try {
+        await getSensors();
+        setInitialized(true);
+        if (!intervalId) {
+          setIntervalId(
+            setInterval(() => {
+              getSensors();
+            }, 5000)
+          );
+        }
+      } catch (error) {
+        showAlert("error", error as string);
       }
     };
     // spoofing, API CALL
-    setSensors([...spoof]);
     setWatchdog();
-    setTimeout(() => {
-      setInitialized(true);
-    }, 500);
     return () => {
       clearInterval(intervalId);
     };
   }, [intervalId]);
 
-  const handleDelete = (sensor: Sensor) => {
+  const handleDelete = async (sensor: Sensor) => {
     // API Call : delete
-    // Optimistic :
-    const buffer = sensors.filter((value) => value.id !== sensor.id);
-    setSensors([...buffer]);
+    try {
+      await requester.delete(`sensor/${sensor.id}`);
+      setSensors([...sensors.filter((value) => value.id !== sensor.id)]);
+    } catch (error) {
+      showAlert("error", error as string);
+    }
   };
 
   return (
@@ -74,14 +75,14 @@ const Sensors: FunctionComponent = () => {
       </Grid>
       {initialized ? (
         <Fragment>
-          <Grid item xs={12} sm={8} md={6} lg={5} xl={3}>
+          <Grid item xs={12} sm={8} md={6} lg={5} xl={4}>
             <Stack>
               <List>
                 {sensors.map((sensor) => (
                   <SensorListItem
                     key={sensor.id}
                     onDelete={handleDelete}
-                    sensor={sensor}
+                    sensor={sensor as SensorGet}
                   />
                 ))}
               </List>

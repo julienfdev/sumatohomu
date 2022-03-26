@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import Actuator, { ActuatorType } from "../../interfaces/Actuator";
 import { Box } from "@mui/system";
-import request from "../../modules/request";
+import request from "../../modules/requester";
 import { AxiosError } from "axios";
 import { AlertContext } from "../utils/AlertProvider";
 interface AddActuatorProps {

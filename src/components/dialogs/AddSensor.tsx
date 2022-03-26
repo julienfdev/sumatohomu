@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useContext, useState } from "react";
 import {
   Button,
   Dialog,
@@ -14,11 +14,14 @@ import {
 } from "@mui/material";
 import { v1 } from "uuid";
 import { Box } from "@mui/system";
-import { SensorGet, SensorType } from "../../interfaces/Sensor";
+import { Sensor, SensorGet, SensorType } from "../../interfaces/Sensor";
+import { AlertContext } from "../utils/AlertProvider";
+import requester from "../../modules/requester";
+
 interface AddSensorProps {
   show: boolean;
   onClose: () => void;
-  onAddedSensor?: (sensor: SensorGet) => void;
+  onAddedSensor?: (sensor: Sensor) => void;
 }
 
 const AddSensor: FunctionComponent<AddSensorProps> = (
@@ -26,21 +29,22 @@ const AddSensor: FunctionComponent<AddSensorProps> = (
 ) => {
   const [designation, setDesignation] = useState("");
   const [type, setType] = useState(SensorType.TEMPERATURE);
+  const { showAlert } = useContext(AlertContext);
 
-  const add = () => {
-    // fake API
-    // Add fake ID
-    const sensor = {
-      id: v1(),
-      designation,
-      type,
-      rawValue: 0,
-      value: "",
-    };
-    // call onClose and onAddedActuator
-    props.onClose();
-    if (props.onAddedSensor) {
-      props.onAddedSensor(sensor);
+  const add = async () => {
+    try {
+      const sensor = {
+        designation,
+        type,
+        rawValue: type === SensorType.PROXIMITY ? false : 0,
+      };
+      await requester.post("sensor", sensor); // call onClose and onAddedActuator
+      props.onClose();
+      if (props.onAddedSensor) {
+        props.onAddedSensor(sensor);
+      }
+    } catch (error) {
+      showAlert("error", error as string);
     }
   };
 

@@ -20,7 +20,7 @@ import Actuator from "../interfaces/Actuator";
 import AddActuator from "./dialogs/AddActuator";
 import ActuatorListItem from "./utils/ActuatorListItem";
 import { AlertContext } from "./utils/AlertProvider";
-import request from "../modules/request";
+import request from "../modules/requester";
 import { AxiosError } from "axios";
 
 const Actuators: FunctionComponent = () => {
@@ -81,7 +81,7 @@ const Actuators: FunctionComponent = () => {
       </Grid>
       {initialized ? (
         <Fragment>
-          <Grid item xs={12} sm={8} md={6} lg={5} xl={3}>
+          <Grid item xs={12} sm={8} md={6} lg={5} xl={4}>
             <Stack>
               <List>
                 {actuators.map((actuator) => (
