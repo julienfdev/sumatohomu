@@ -12,53 +12,63 @@ import {
   ChangeEvent,
   Fragment,
   FunctionComponent,
+  useContext,
   useEffect,
   useState,
 } from "react";
 import Actuator, { ActuatorType } from "../interfaces/Actuator";
 import AddActuator from "./dialogs/AddActuator";
 import ActuatorListItem from "./utils/ActuatorListItem";
-
-const spoof = [
-  {
-    id: "2309234",
-    type: ActuatorType.BLINDS,
-    designation: "Volet",
-    state: false,
-  },
-  {
-    id: "2309254",
-    type: ActuatorType.LIGHT,
-    designation: "Lumière salon",
-    state: true,
-  },
-] as Actuator[];
+import { AlertContext } from "./utils/AlertProvider";
+import request from "../modules/request";
+import { AxiosError } from "axios";
 
 const Actuators: FunctionComponent = () => {
   const [initialized, setInitialized] = useState(false);
   const [actuators, setActuators] = useState([] as Actuator[]);
   const [showAddActuator, setShowAddActuator] = useState(false);
-
-  useEffect(() => {
-    // spoofing, API CALL
-    setActuators([...spoof]);
-    setTimeout(() => {
+  const { showAlert } = useContext(AlertContext);
+  const getActuators = async () => {
+    try {
+      const response = await request.get("actuator");
+      setActuators([...response.data]);
       setInitialized(true);
-    }, 500);
+    } catch (error) {
+      showAlert("error", error as string);
+    }
+  };
+  const updateActuator = async (actuator: Actuator) => {
+    try {
+      const response = await request.put(`actuator/${actuator.id}`, {
+        state: actuator.state,
+      });
+      setActuators([...actuators]);
+    } catch (error) {
+      showAlert("error", error as string);
+    }
+  };
+  const deleteActuator = async (actuator: Actuator) => {
+    try {
+      const response = await request.delete(`actuator/${actuator.id}`);
+      setActuators(actuators.filter((value) => value.id !== actuator.id));
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError;
+      showAlert("error", axiosError.response?.data);
+    }
+  };
+  
+  useEffect(() => {
+    getActuators();
   }, []);
   const handleCheckChange = (
     actuator: Actuator,
     e: ChangeEvent<HTMLInputElement>
   ) => {
     actuator.state = e.target.checked;
-    setActuators([...actuators]);
-    // API CALL and handling
+    updateActuator(actuator);
   };
   const handleDelete = (actuator: Actuator) => {
-    // API Call : delete
-    // Optimistic :
-    const buffer = actuators.filter((value) => value.id !== actuator.id);
-    setActuators([...buffer]);
+    deleteActuator(actuator);
   };
 
   return (

@@ -15,8 +15,9 @@ import {
   TextField,
 } from "@mui/material";
 import Actuator, { ActuatorType } from "../../interfaces/Actuator";
-import { v1 } from "uuid";
 import { Box } from "@mui/system";
+import request from "../../modules/request";
+import { AxiosError } from "axios";
 interface AddActuatorProps {
   show: boolean;
   onClose: () => void;
@@ -30,19 +31,17 @@ const AddActuator: FunctionComponent<AddActuatorProps> = (
   const [type, setType] = useState(ActuatorType.BLINDS);
   const [state, setState] = useState(false);
 
-  const add = () => {
-    // fake API
-    // Add fake ID
+  const add = async () => {
     const actuator = {
-      id: v1(),
       designation,
       type,
       state,
     };
+    const response = await request.post("actuator", actuator);
     // call onClose and onAddedActuator
     props.onClose();
     if (props.onAddedActuator) {
-      props.onAddedActuator(actuator);
+      props.onAddedActuator({ ...actuator, id: response.data.id });
     }
   };
 
