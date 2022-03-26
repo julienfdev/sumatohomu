@@ -1,7 +1,20 @@
 import { AddCircle } from "@mui/icons-material";
-import { Button, Grid, List, Stack, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  List,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
-import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  Fragment,
+  FunctionComponent,
+  useEffect,
+  useState,
+} from "react";
 import Actuator, { ActuatorType } from "../interfaces/Actuator";
 import AddActuator from "./dialogs/AddActuator";
 import ActuatorListItem from "./utils/ActuatorListItem";
@@ -22,12 +35,16 @@ const spoof = [
 ] as Actuator[];
 
 const Actuators: FunctionComponent = () => {
+  const [initialized, setInitialized] = useState(false);
   const [actuators, setActuators] = useState([] as Actuator[]);
   const [showAddActuator, setShowAddActuator] = useState(false);
 
   useEffect(() => {
     // spoofing, API CALL
     setActuators([...spoof]);
+    setTimeout(() => {
+      setInitialized(true);
+    }, 1000);
   }, []);
   const handleCheckChange = (
     actuator: Actuator,
@@ -51,33 +68,43 @@ const Actuators: FunctionComponent = () => {
           Actuateurs
         </Typography>
       </Grid>
-      <Grid item xs={12} sm={8} md={6} lg={5} xl={3}>
-        <Stack>
-          <List>
-            {actuators.map((actuator) => (
-              <ActuatorListItem
-                onCheckChange={handleCheckChange}
-                onDelete={handleDelete}
-                actuator={actuator}
-              />
-            ))}
-          </List>
-          <Box justifyContent={"center"} display="flex">
-            <Button
-              color="primary"
-              sx={{ borderRadius: 5 }}
-              onClick={() => setShowAddActuator(true)}
-            >
-              <AddCircle sx={{ marginRight: 1 }} /> Ajouter
-            </Button>
-          </Box>
-        </Stack>
-      </Grid>
-      <AddActuator
-        show={showAddActuator}
-        onClose={() => setShowAddActuator(false)}
-        onAddedActuator={(actuator) => setActuators([...actuators, actuator])}
-      />
+      {initialized ? (
+        <Fragment>
+          <Grid item xs={12} sm={8} md={6} lg={5} xl={3}>
+            <Stack>
+              <List>
+                {actuators.map((actuator) => (
+                  <ActuatorListItem
+                    onCheckChange={handleCheckChange}
+                    onDelete={handleDelete}
+                    actuator={actuator}
+                  />
+                ))}
+              </List>
+              <Box justifyContent={"center"} display="flex">
+                <Button
+                  color="primary"
+                  sx={{ borderRadius: 5 }}
+                  onClick={() => setShowAddActuator(true)}
+                >
+                  <AddCircle sx={{ marginRight: 1 }} /> Ajouter
+                </Button>
+              </Box>
+            </Stack>
+          </Grid>
+          <AddActuator
+            show={showAddActuator}
+            onClose={() => setShowAddActuator(false)}
+            onAddedActuator={(actuator) =>
+              setActuators([...actuators, actuator])
+            }
+          />
+        </Fragment>
+      ) : (
+        <Grid item xs={12} justifyContent="center" display={"flex"}>
+          <CircularProgress color="secondary" />
+        </Grid>
+      )}
     </Grid>
   );
 };
