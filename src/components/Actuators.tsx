@@ -16,7 +16,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import Actuator, { ActuatorType } from "../interfaces/Actuator";
+import Actuator from "../interfaces/Actuator";
 import AddActuator from "./dialogs/AddActuator";
 import ActuatorListItem from "./utils/ActuatorListItem";
 import { AlertContext } from "./utils/AlertProvider";
@@ -39,7 +39,7 @@ const Actuators: FunctionComponent = () => {
   };
   const updateActuator = async (actuator: Actuator) => {
     try {
-      const response = await request.put(`actuator/${actuator.id}`, {
+      await request.put(`actuator/${actuator.id}`, {
         state: actuator.state,
       });
       setActuators([...actuators]);
@@ -49,16 +49,17 @@ const Actuators: FunctionComponent = () => {
   };
   const deleteActuator = async (actuator: Actuator) => {
     try {
-      const response = await request.delete(`actuator/${actuator.id}`);
+      await request.delete(`actuator/${actuator.id}`);
       setActuators(actuators.filter((value) => value.id !== actuator.id));
     } catch (error: unknown) {
       const axiosError = error as AxiosError;
       showAlert("error", axiosError.response?.data);
     }
   };
-  
+
   useEffect(() => {
     getActuators();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleCheckChange = (
     actuator: Actuator,

@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useContext, useState } from "react";
 import {
   Button,
   Dialog,
@@ -18,6 +18,7 @@ import Actuator, { ActuatorType } from "../../interfaces/Actuator";
 import { Box } from "@mui/system";
 import request from "../../modules/request";
 import { AxiosError } from "axios";
+import { AlertContext } from "../utils/AlertProvider";
 interface AddActuatorProps {
   show: boolean;
   onClose: () => void;
@@ -30,18 +31,23 @@ const AddActuator: FunctionComponent<AddActuatorProps> = (
   const [designation, setDesignation] = useState("");
   const [type, setType] = useState(ActuatorType.BLINDS);
   const [state, setState] = useState(false);
+  const { showAlert } = useContext(AlertContext);
 
   const add = async () => {
-    const actuator = {
-      designation,
-      type,
-      state,
-    };
-    const response = await request.post("actuator", actuator);
-    // call onClose and onAddedActuator
-    props.onClose();
-    if (props.onAddedActuator) {
-      props.onAddedActuator({ ...actuator, id: response.data.id });
+    try {
+      const actuator = {
+        designation,
+        type,
+        state,
+      };
+      const response = await request.post("actuator", actuator);
+      // call onClose and onAddedActuator
+      props.onClose();
+      if (props.onAddedActuator) {
+        props.onAddedActuator({ ...actuator, id: response.data.id });
+      }
+    } catch (error) {
+      showAlert("error", (error as AxiosError).response?.data);
     }
   };
 
