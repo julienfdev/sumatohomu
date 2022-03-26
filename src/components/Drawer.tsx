@@ -1,8 +1,5 @@
 import { FunctionComponent, ReactElement, useEffect, useState } from "react";
-import {
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import theme from "../themes/theme";
 import {
@@ -50,6 +47,9 @@ const DrawerContainer: FunctionComponent = () => {
           boxShadow: "0 0 30px rgba(0, 0, 0, 0.2)",
           boxSizing: "border-box",
         },
+        "& .Mui-selected": {
+          backgroundColor: "rgba(255,255,255,0.2)",
+        },
       }}
     >
       <List>
@@ -58,6 +58,7 @@ const DrawerContainer: FunctionComponent = () => {
             key={value.path}
             sx={{
               color: "white",
+              padding: 0,
             }}
             onClick={() => {
               navigate(value.path);
