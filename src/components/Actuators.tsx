@@ -31,7 +31,7 @@ const Actuators: FunctionComponent = () => {
   const getActuators = async () => {
     try {
       const response = await request.get("actuator");
-      setActuators([...response.data]);
+      setActuators([...response.data.data]);
       setInitialized(true);
     } catch (error) {
       showAlert("error", error as string);

@@ -31,7 +31,7 @@ const Sensors: FunctionComponent = () => {
   useEffect(() => {
     const getSensors = async () => {
       const response = await requester.get("sensor");
-      setSensors([...response.data]);
+      setSensors([...response.data.data]);
     };
 
     const setWatchdog = async () => {
