@@ -39,7 +39,7 @@ const Actuators: FunctionComponent = () => {
   };
   const updateActuator = async (actuator: Actuator) => {
     try {
-      await request.put(`actuator/${actuator.id}`, {
+      await request.patch(`actuator/${actuator.id}`, {
         state: actuator.state,
       });
       setActuators([...actuators]);
