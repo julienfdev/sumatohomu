@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./styles/index.css";
@@ -18,17 +18,10 @@ ReactDOM.render(
         <React.StrictMode>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<App />}>
+            <Route path="/" element={<RequestAuth><App /></RequestAuth>}>
               <Route path="actuators" element={<Actuators />}></Route>
               <Route path="sensors" element={<Sensors />}></Route>
-              <Route
-                path="users"
-                element={
-                  <RequestAuth>
-                    <Users />
-                  </RequestAuth>
-                }
-              ></Route>
+              <Route path="users" element={<Users />}></Route>
               <Route index element={<Dashboard />} />
             </Route>
           </Routes>

@@ -27,7 +27,15 @@ const AuthContext = createContext<AuthContextType>(null!);
 
 const AuthProvider: FunctionComponent = ({ children }) => {
   // Signin etc...
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("sumatohomu_token")
+  );
+  if (token) {
+    requester.defaults.headers.common = {
+      ...requester.defaults.headers.common,
+      Authorization: `Bearer ${token}`,
+    };
+  }
   const signin = async (
     email: string,
     password: string,
@@ -37,6 +45,10 @@ const AuthProvider: FunctionComponent = ({ children }) => {
       const response = await requester.post("user/login", { email, password });
       setToken(response.data.data.token);
       if (response.data.data.token) {
+        requester.defaults.headers.common = {
+          ...requester.defaults.headers.common,
+          Authorization: `Bearer ${response.data.data.token}`,
+        };
         localStorage.setItem("sumatohomu_token", response.data.data.token);
       }
       if (callback) {
@@ -82,11 +94,11 @@ const AuthProvider: FunctionComponent = ({ children }) => {
     if (!token) {
       const value = localStorage.getItem("sumatohomu_token");
       if (value) {
-        setToken(value);
         requester.defaults.headers.common = {
           ...requester.defaults.headers.common,
           Authorization: `Bearer ${value}`,
         };
+        setToken(value);
       } else {
         requester.defaults.headers.common = {
           ...requester.defaults.headers.common,
@@ -94,7 +106,7 @@ const AuthProvider: FunctionComponent = ({ children }) => {
         };
       }
     }
-  }, [token]);
+  });
 
   return (
     <AuthContext.Provider value={{ token, signin, signup, signout }}>
