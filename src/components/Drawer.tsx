@@ -1,7 +1,6 @@
 import { FunctionComponent, ReactElement, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
-import theme from "../themes/theme";
 import {
   List,
   ListItem,
@@ -18,6 +17,7 @@ import {
   Logout,
 } from "@mui/icons-material";
 import { useAuth } from "./utils/AuthProvider";
+import { useTheme } from "../themes/ThemeProvider";
 
 const drawerWidth = 200;
 const linkList: {
@@ -36,6 +36,7 @@ const DrawerContainer: FunctionComponent = () => {
   const auth = useAuth();
   const location = useLocation();
   const [selected, setSelected] = useState(-1);
+  const theme = useTheme();
 
   useEffect(() => {
     setSelected(
@@ -91,9 +92,7 @@ const DrawerContainer: FunctionComponent = () => {
           <List>
             <ListItem
               onClick={() => {
-                auth.signout(() => {
-                  navigate("/login");
-                });
+                auth.signout();
               }}
               sx={{
                 padding: 0,

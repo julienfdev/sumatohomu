@@ -9,26 +9,33 @@ import Sensors from "./components/Sensors";
 import Users from "./components/Users";
 import Login from "./components/Login";
 import RequestAuth from "./components/utils/RequestAuth";
+import AuthProvider from "./components/utils/AuthProvider";
+import { AlertProvider, AlertSnack } from "./components/utils/AlertProvider";
 ReactDOM.render(
   <BrowserRouter>
-    <React.StrictMode>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<App />}>
-          <Route path="actuators" element={<Actuators />}></Route>
-          <Route path="sensors" element={<Sensors />}></Route>
-          <Route
-            path="users"
-            element={
-              <RequestAuth>
-                <Users />
-              </RequestAuth>
-            }
-          ></Route>
-          <Route index element={<Dashboard />} />
-        </Route>
-      </Routes>
-    </React.StrictMode>
+    <AuthProvider>
+      <AlertProvider>
+        <React.StrictMode>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<App />}>
+              <Route path="actuators" element={<Actuators />}></Route>
+              <Route path="sensors" element={<Sensors />}></Route>
+              <Route
+                path="users"
+                element={
+                  <RequestAuth>
+                    <Users />
+                  </RequestAuth>
+                }
+              ></Route>
+              <Route index element={<Dashboard />} />
+            </Route>
+          </Routes>
+        </React.StrictMode>
+        <AlertSnack />
+      </AlertProvider>
+    </AuthProvider>
   </BrowserRouter>,
   document.getElementById("root")
 );

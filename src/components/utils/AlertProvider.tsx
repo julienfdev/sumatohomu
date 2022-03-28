@@ -38,7 +38,7 @@ export const AlertSnack: FunctionComponent = () => {
       open={show}
       autoHideDuration={5000}
       onClose={() => setShow(false)}
-      sx={{ maxWidth: 10 }}
+      sx={{ maxWidth: 400 }}
     >
       <Alert severity={color}>
         {typeof message === "object" ? JSON.stringify(message) : message}

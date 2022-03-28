@@ -10,25 +10,68 @@ import requester from "../../modules/requester";
 interface AuthContextType {
   token: string | null;
   signin: (
-    user: string,
+    email: string,
     password: string,
-    callback?: (err?: any) => Promise<void>
+    callback?: (err?: any) => void
   ) => Promise<void>;
-  signout: (callback?: VoidFunction) => Promise<void>;
+  signup: (
+    email: string,
+    username: string,
+    password: string,
+    callback?: (err?: any) => void
+  ) => Promise<void>;
+  signout: (callback?: VoidFunction) => void;
 }
 
 const AuthContext = createContext<AuthContextType>(null!);
 
 const AuthProvider: FunctionComponent = ({ children }) => {
   // Signin etc...
-  const [token, setToken] = useState<string | null>("fek");
+  const [token, setToken] = useState<string | null>(null);
   const signin = async (
-    user: string,
+    email: string,
     password: string,
     callback?: (err?: any) => void
-  ) => {};
-  const signout = async (callback?: VoidFunction) => {
-    // flush token etc...
+  ) => {
+    try {
+      const response = await requester.post("user/login", { email, password });
+      setToken(response.data.data.token);
+      if (response.data.data.token) {
+        localStorage.setItem("sumatohomu_token", response.data.data.token);
+      }
+      if (callback) {
+        callback();
+      }
+    } catch (error) {
+      if (callback) {
+        callback(error);
+        return;
+      }
+      throw new Error(error as string);
+    }
+  };
+  const signup = async (
+    email: string,
+    username: string,
+    password: string,
+    callback?: (err?: any) => void
+  ) => {
+    try {
+      await requester.post("user", { email, password, username });
+      if (callback) {
+        callback();
+      }
+    } catch (error) {
+      if (callback) {
+        callback(error);
+        return;
+      }
+      throw new Error(error as string);
+    }
+  };
+  const signout = (callback?: VoidFunction) => {
+    localStorage.removeItem("sumatohomu_token");
+    setToken(null);
     if (callback) {
       callback();
     }
@@ -44,12 +87,17 @@ const AuthProvider: FunctionComponent = ({ children }) => {
           ...requester.defaults.headers.common,
           Authorization: `Bearer ${value}`,
         };
+      } else {
+        requester.defaults.headers.common = {
+          ...requester.defaults.headers.common,
+          Authorization: false,
+        };
       }
     }
   }, [token]);
 
   return (
-    <AuthContext.Provider value={{ token, signin, signout }}>
+    <AuthContext.Provider value={{ token, signin, signup, signout }}>
       {children}
     </AuthContext.Provider>
   );
