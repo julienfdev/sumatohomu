@@ -33,7 +33,7 @@ const linkList: {
 
 const DrawerContainer: FunctionComponent = () => {
   const navigate = useNavigate();
-  const auth = useAuth();
+  // const auth = useAuth();
   const location = useLocation();
   const [selected, setSelected] = useState(-1);
   const theme = useTheme();
@@ -87,7 +87,7 @@ const DrawerContainer: FunctionComponent = () => {
           </ListItem>
         ))}
       </List>
-      <Box marginTop={"auto"}>
+      {/* <Box marginTop={"auto"}>
         {auth.token ? (
           <List>
             <ListItem
@@ -109,7 +109,7 @@ const DrawerContainer: FunctionComponent = () => {
         ) : (
           ""
         )}
-      </Box>
+      </Box> */}
     </Drawer>
   );
 };

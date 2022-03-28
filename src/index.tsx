@@ -13,22 +13,23 @@ import AuthProvider from "./components/utils/AuthProvider";
 import { AlertProvider, AlertSnack } from "./components/utils/AlertProvider";
 ReactDOM.render(
   <BrowserRouter>
-    <AuthProvider>
-      <AlertProvider>
-        <React.StrictMode>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<RequestAuth><App /></RequestAuth>}>
-              <Route path="actuators" element={<Actuators />}></Route>
-              <Route path="sensors" element={<Sensors />}></Route>
-              <Route path="users" element={<Users />}></Route>
-              <Route index element={<Dashboard />} />
-            </Route>
-          </Routes>
-        </React.StrictMode>
-        <AlertSnack />
-      </AlertProvider>
-    </AuthProvider>
+    {/* <AuthProvider> */}
+    <AlertProvider>
+      <React.StrictMode>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          {/* <Route path="/" element={<RequestAuth><App /></RequestAuth>}> */}
+          <Route path="/" element={<App />}>
+            <Route path="actuators" element={<Actuators />}></Route>
+            <Route path="sensors" element={<Sensors />}></Route>
+            <Route path="users" element={<Users />}></Route>
+            <Route index element={<Dashboard />} />
+          </Route>
+        </Routes>
+      </React.StrictMode>
+      <AlertSnack />
+    </AlertProvider>
+    {/* </AuthProvider> */}
   </BrowserRouter>,
   document.getElementById("root")
 );
