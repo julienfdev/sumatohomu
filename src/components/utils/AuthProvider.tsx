@@ -21,13 +21,18 @@ const AuthContext = createContext<AuthContextType>(null!);
 
 const AuthProvider: FunctionComponent = ({ children }) => {
   // Signin etc...
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>("fek");
   const signin = async (
     user: string,
     password: string,
     callback?: (err?: any) => void
   ) => {};
-  const signout = async (callback?: VoidFunction) => {};
+  const signout = async (callback?: VoidFunction) => {
+    // flush token etc...
+    if (callback) {
+      callback();
+    }
+  };
 
   // Try to get the token at mount
   useEffect(() => {

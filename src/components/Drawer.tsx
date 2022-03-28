@@ -8,8 +8,16 @@ import {
   ListItemIcon,
   ListItemButton,
   ListItemText,
+  Box,
 } from "@mui/material";
-import { Sensors, Dashboard, Person, Lightbulb } from "@mui/icons-material";
+import {
+  Sensors,
+  Dashboard,
+  Person,
+  Lightbulb,
+  Logout,
+} from "@mui/icons-material";
+import { useAuth } from "./utils/AuthProvider";
 
 const drawerWidth = 200;
 const linkList: {
@@ -25,6 +33,7 @@ const linkList: {
 
 const DrawerContainer: FunctionComponent = () => {
   const navigate = useNavigate();
+  const auth = useAuth();
   const location = useLocation();
   const [selected, setSelected] = useState(-1);
 
@@ -77,6 +86,31 @@ const DrawerContainer: FunctionComponent = () => {
           </ListItem>
         ))}
       </List>
+      <Box marginTop={"auto"}>
+        {auth.token ? (
+          <List>
+            <ListItem
+              onClick={() => {
+                auth.signout(() => {
+                  navigate("/login");
+                });
+              }}
+              sx={{
+                padding: 0,
+              }}
+            >
+              <ListItemButton>
+                <ListItemIcon sx={{ color: "white" }}>
+                  <Logout />
+                </ListItemIcon>
+                <ListItemText sx={{ color: "white" }}>Déconnexion</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </List>
+        ) : (
+          ""
+        )}
+      </Box>
     </Drawer>
   );
 };
