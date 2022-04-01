@@ -15,7 +15,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Sensor, SensorGet, SensorType } from "../interfaces/Sensor";
+import { Sensor, SensorGet } from "../interfaces/Sensor";
 import AddSensor from "./dialogs/AddSensor";
 import SensorListItem from "./utils/SensorListItem";
 import requester from "../modules/requester";
@@ -54,7 +54,7 @@ const Sensors: FunctionComponent = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [intervalId]);
+  }, [intervalId, showAlert]);
 
   const handleDelete = async (sensor: Sensor) => {
     // API Call : delete

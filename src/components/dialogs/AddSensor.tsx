@@ -12,9 +12,8 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { v1 } from "uuid";
 import { Box } from "@mui/system";
-import { Sensor, SensorGet, SensorType } from "../../interfaces/Sensor";
+import { Sensor, SensorType } from "../../interfaces/Sensor";
 import { AlertContext } from "../utils/AlertProvider";
 import requester from "../../modules/requester";
 
@@ -38,10 +37,10 @@ const AddSensor: FunctionComponent<AddSensorProps> = (
         type,
         rawValue: type === SensorType.PROXIMITY ? false : 0,
       };
-      await requester.post("sensor", sensor); // call onClose and onAddedActuator
+     const response = await requester.post("sensor", sensor); // call onClose and onAddedActuator
       props.onClose();
       if (props.onAddedSensor) {
-        props.onAddedSensor(sensor);
+        props.onAddedSensor({...sensor, id: response.data.data.id});
       }
     } catch (error) {
       showAlert("error", error as string);

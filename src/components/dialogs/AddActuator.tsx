@@ -44,7 +44,7 @@ const AddActuator: FunctionComponent<AddActuatorProps> = (
       // call onClose and onAddedActuator
       props.onClose();
       if (props.onAddedActuator) {
-        props.onAddedActuator({ ...actuator, id: response.data.id });
+        props.onAddedActuator({ ...actuator, id: response.data.data.id });
       }
     } catch (error) {
       showAlert("error", (error as AxiosError).response?.data);
