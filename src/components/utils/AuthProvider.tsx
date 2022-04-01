@@ -106,7 +106,7 @@ const AuthProvider: FunctionComponent = ({ children }) => {
         };
       }
     }
-  });
+  }, [token]);
 
   return (
     <AuthContext.Provider value={{ token, signin, signup, signout }}>

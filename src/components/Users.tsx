@@ -1,4 +1,4 @@
-import { Grid, List, Stack, Typography } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import User from "../interfaces/User";
 import { AlertContext } from "./utils/AlertProvider";
@@ -25,7 +25,7 @@ const Users: FunctionComponent = () => {
       }
     };
     getUsers();
-  }, []);
+  }, [showAlert]);
 
   const deleteUser = (id: number | string) => {
     setUsers(users.filter((user) => user.id !== id));

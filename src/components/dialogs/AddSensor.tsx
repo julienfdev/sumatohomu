@@ -12,9 +12,8 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { v1 } from "uuid";
 import { Box } from "@mui/system";
-import { Sensor, SensorGet, SensorType } from "../../interfaces/Sensor";
+import { Sensor, SensorType } from "../../interfaces/Sensor";
 import { AlertContext } from "../utils/AlertProvider";
 import requester from "../../modules/requester";
 
