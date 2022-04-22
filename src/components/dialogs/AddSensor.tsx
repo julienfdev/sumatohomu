@@ -49,16 +49,16 @@ const AddSensor: FunctionComponent<AddSensorProps> = (
 
   return (
     <Dialog open={props.show} onClose={props.onClose}>
-      <DialogTitle>Ajouter un actuateur</DialogTitle>
+      <DialogTitle>Ajouter un capteur</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Veuillez remplir les champs ci-dessous pour ajouter votre actuateur
+          Veuillez remplir les champs ci-dessous pour ajouter votre capteur
         </DialogContentText>
         <Box marginY={2}>
           <Stack spacing={2}>
             <TextField
               fullWidth
-              placeholder="ex: volet roulant"
+              placeholder="ex: thermomètre"
               label="Designation"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}

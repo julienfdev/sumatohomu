@@ -27,7 +27,7 @@ const linkList: {
 }[] = [
   { path: "/", text: "Dashboard", icon: <Dashboard /> },
   { path: "/actuators", text: "Actuateurs", icon: <Lightbulb /> },
-  { path: "/sensors", text: "Sensors", icon: <Sensors /> },
+  { path: "/sensors", text: "Capteurs", icon: <Sensors /> },
   { path: "/users", text: "Utilisateurs", icon: <Person /> },
 ];
 
